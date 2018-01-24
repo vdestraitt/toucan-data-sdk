@@ -32,7 +32,7 @@ dfs = sdk.dfs
 
 ## ToucanDataSdk class
 
-### ToucanDataSdk.sdk
+### ToucanDataSdk.dfs
 
 * property,
 * uses the client to send a request to the back end to send the data sources 
