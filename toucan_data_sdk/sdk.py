@@ -106,21 +106,24 @@ class ToucanDataSdk:
                 logger.error('failed to backup current cache' + str(e))
 
 
-def extract_zip(tmp_file):
+def extract_zip(zip_file_path):
     """
     Returns:
         dict: Dict[str, DataFrame]
     """
     dfs = {}
-    with zipfile.ZipFile(tmp_file.name, mode='r') as z_file:
+    with zipfile.ZipFile(zip_file_path, mode='r') as z_file:
         names = z_file.namelist()
         for name in names:
             content = z_file.read(name)
-            with tempfile.NamedTemporaryFile() as tmp_file:
-                tmp_file.write(content)
-                tmp_file.flush()
-                tmp_file.seek(0)
-                dfs[name] = joblib.load(tmp_file.name)
+            _, tmp_file_path = tempfile.mkstemp()
+            try:
+                with open(tmp_file_path, 'wb') as tmp_file:
+                    tmp_file.write(content)
+
+                dfs[name] = joblib.load(tmp_file_path)
+            finally:
+                shutil.rmtree(tmp_file_path, ignore_errors=True)
     return dfs
 
 
@@ -133,31 +136,17 @@ def extract(data):
         dict: Dict[str, DataFrame]
 
     """
-    with tempfile.NamedTemporaryFile() as tmp_file:
-        tmp_file.write(data)
-        tmp_file.flush()
-        tmp_file.seek(0)
+    _, tmp_file_path = tempfile.mkstemp()
+    try:
+        with open(tmp_file_path, 'wb') as tmp_file:
+            tmp_file.write(data)
 
-        if is_zipfile(tmp_file):
-            return extract_zip(tmp_file)
+        if zipfile.is_zipfile(tmp_file_path):
+            return extract_zip(tmp_file_path)
         else:
             raise DataSdkError('Unsupported file type')
-
-
-def is_zipfile(tmp_file):
-    """
-    Args:
-        tmp_file (tempfile.TemporaryFile):
-
-    Returns:
-        bool:
-    """
-    try:
-        return zipfile.is_zipfile(tmp_file.name)
-    except Exception:
-        return False
     finally:
-        tmp_file.seek(0)
+        shutil.rmtree(tmp_file_path, ignore_errors=True)
 
 
 class DataSdkError(Exception):
