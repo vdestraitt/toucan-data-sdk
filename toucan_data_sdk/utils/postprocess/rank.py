@@ -61,8 +61,7 @@ def rank(df, value_cols, group_cols=None, rank_cols_names=None, method='min', as
        B    2018    50       7.0     3.5
 
     3. rank(df, value_cols=['VALUE_1', 'VALUE_2'], group_cols=['ENTITY', 'YEAR'],
-            rank_cols_name=['RANK_1', 'RANK_2']):
-    returns:
+            rank_cols_name=['RANK_1', 'RANK_2']) returns:
 
     ENTITY  YEAR  VALUE_1  VALUE_2  RANK_1  RANK_2
        A    2017    10       3        1       2
