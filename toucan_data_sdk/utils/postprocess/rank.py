@@ -17,8 +17,8 @@ def rank(df, value_cols, group_cols=None, rank_cols_names=None, method='min', as
         - 'average': average rank of group
         - 'first': ranks assigned in order the values appear in the series
         - 'dense': like 'min', but rank always increases by 1 between groups
-    :param ascending (bool, optional): True (default) or False whether the rank should be determined based on ascending or
-      descending order respectively
+    :param ascending (bool, optional): True (default) or False whether the rank should be determined based 
+      on ascending or descending order respectively
     :return: the df dataframe with the new ranking columns.
 
 
