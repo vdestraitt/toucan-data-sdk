@@ -28,8 +28,8 @@ def gen_data_sdk(mocker):
     sdk = ToucanDataSdk('some_url', auth=('', ''))
     sdk.client = gen_client(mocker)
     yield sdk
-    if os.path.exists(ToucanDataSdk.EXTRACTION_CACHE_PATH):
-        shutil.rmtree(ToucanDataSdk.EXTRACTION_CACHE_PATH)
+    if os.path.exists(sdk.EXTRACTION_CACHE_PATH):
+        shutil.rmtree(sdk.EXTRACTION_CACHE_PATH)
 
 
 def gen_client_error(mocker):
@@ -47,11 +47,11 @@ def gen_client_error(mocker):
 
 @pytest.fixture(name='sdk_error', scope='function')
 def gen_data_sdk_error(mocker):
-    sdk = ToucanDataSdk('some_url', auth=('', ''))
+    sdk = ToucanDataSdk('some_url', small_app='demo', auth=('', ''))
     sdk.client = gen_client_error(mocker)
     yield sdk
-    if os.path.exists(ToucanDataSdk.EXTRACTION_CACHE_PATH):
-        shutil.rmtree(ToucanDataSdk.EXTRACTION_CACHE_PATH)
+    if os.path.exists(sdk.EXTRACTION_CACHE_PATH):
+        shutil.rmtree(sdk.EXTRACTION_CACHE_PATH)
 
 
 @pytest.fixture(name='tmp_dir', scope='module')

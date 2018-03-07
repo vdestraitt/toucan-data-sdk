@@ -10,15 +10,17 @@ from toucan_client import ToucanClient
 
 logger = logging.getLogger(__name__)
 
+EXTRACTION_CACHE_PATH = 'extraction_cache_{}'
+
 
 class ToucanDataSdk:
-    EXTRACTION_CACHE_PATH = 'extraction_cache'
-    EXTRACTION_CACHE_PATH_BK = 'extraction_cache.bk'
-
-    def __init__(self, small_app_url, auth, stage="staging"):
-        self.client = ToucanClient(small_app_url, auth=auth)
-        self.client.stage = stage
+    def __init__(self, instance_url, auth, small_app=None, stage="staging"):
+        instance_url = instance_url.strip().rstrip('/')
+        small_app_url = instance_url + (('/' + small_app) if small_app else '')
+        self.client = ToucanClient(small_app_url, auth=auth, stage=stage)
         self._dfs = None
+        self.EXTRACTION_CACHE_PATH = EXTRACTION_CACHE_PATH.format(small_app)
+        self.EXTRACTION_CACHE_PATH_BK = self.EXTRACTION_CACHE_PATH + '.bk'
 
     @property
     def dfs(self):
